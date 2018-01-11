@@ -1,0 +1,303 @@
+
+<html><head></head><body><h1 id="introduction">Introduction</h1>
+<hr />
+<p>StrongHold Web Service API is a REST wrapper for event processing. It is implemented as Node Js web application that can be deployed into Docker container.
+All commands will return HTTP response code 200 to indicate successful completion or various HTTP error codes (usually 401 or 500) to indicate failure. Additional information about failure can be obtained from response object which will contain fields "error" with error code and "description" with textual description of an error.</p>
+<h2 id="error-response-example">Error Response Example</h2>
+<pre><code class="lang-json">"statusCode": 500,
+"body": {
+     "error": 4,
+     "description": "Request timed out"
+}
+</code></pre>
+<h1 id="standalone-stronghold-webservice-api">Standalone StrongHold WebService API</h1>
+<hr />
+<h2 id="installation">Installation</h2>
+<ol>
+<li>Extract archive</li>
+<li>Modify <strong>shwebservice-run.sh</strong> with proper configuration</li>
+<li>Run script (In case you need log file and run it as daemon use: <strong>./shwebservice-run.sh &gt;&gt; shwebservice.log 2&gt;&amp;1 &amp;</strong>)</li>
+</ol>
+<h1 id="docker-notes">Docker notes</h1>
+<hr />
+<h2 id="docker-installation">Docker installation</h2>
+<p>Installation manual for CentOs 7: <a href="https://docs.docker.com/engine/installation/linux/centos/">https://docs.docker.com/engine/installation/linux/centos/</a></p>
+<h2 id="stronhold-ws-configuration">StronHold WS Configuration</h2>
+<table>
+<thead>
+<tr>
+<th>Docker Environment variable</th>
+<th>Description</th>
+<th>Sample value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SH_WS_DEBUG</td>
+<td>Debug level</td>
+<td>3</td>
+</tr>
+<tr>
+<td>SH_WS_IP</td>
+<td>IP address of StrongHold server</td>
+<td>127.0.0.1</td>
+</tr>
+<tr>
+<td>SH_WS_LOCALE</td>
+<td>Locale</td>
+<td>en_US.UTF-8</td>
+</tr>
+<tr>
+<td>SH_WS_LOGIN</td>
+<td>Login name for StrongHold server</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>SH_WS_NODE_DEBUG</td>
+<td>Debug level for server messages (default: "log")</td>
+<td>"log", "info", "warn", "error", "dir", "assert"</td>
+</tr>
+<tr>
+<td>SH_WS_PASSWORD</td>
+<td>Password for StrongHold server</td>
+<td>password</td>
+</tr>
+<tr>
+<td>SH_WS_PORT</td>
+<td>Port for Web Service</td>
+<td>8081</td>
+</tr>
+<tr>
+<td>SH_WS_SH_PORT</td>
+<td>Port of StrongHold server</td>
+<td>4720</td>
+</tr>
+</tbody>
+</table>
+<h2 id="useful-commands">Useful commands</h2>
+<p>Import container: <strong>docker load -i stronghold_ws.tar</strong>&lt;br /&gt;
+Run stronghold_ws container with environment variables: <strong>docker run --restart=unless-stopped -p 8081:8081 -eSH_WS_IP="172.17.0.1" -eSH_WS_SH_PORT="4720" -eSH_WS_PORT="8081" -eSH_WS_LOGIN="admin" -eSH_WS_PASSWORD="password"-eSH_WS_DEBUG="5" -eSH_WS_NODE_DEBUG="info" -d stronghold_ws</strong>&lt;br /&gt;
+Print running containers (here you can get Container ID, for example "0b9fd8c10288e8"): <strong>docker ps</strong>&lt;br /&gt;
+Follow logs of container: <strong>docker logs -f 0b9fd8c10288e8</strong>&lt;br /&gt;
+Print all log: <strong>docker logs --tail all 0b9fd8c10288e8</strong>&lt;br /&gt;
+Write all log in file: <strong>docker logs --tail all 0b9fd8c10288e8 &gt; logfile.log 2&gt;&amp;1</strong>&lt;br /&gt;
+Stop container: <strong>docker stop 0b9fd8c10288e8</strong>&lt;br /&gt;</p>
+<h2 id="node-js-call-example">Node JS call example</h2>
+<pre><code class="lang-javascript">var request = require("request");
+
+var message = { method: 'POST',
+  url: 'http://127.0.0.1:8081/sendEvent',
+  headers:
+  {'content-type': 'application/json' },
+  body:
+  {
+    "class":"TRANSACTION",
+    "online": true,
+    "stage":"stage",
+    "attributes":
+    {
+        "TLOGID": "9999999",
+        "FLD_002":"12345678901234567",
+        "FLD_004":"16.00",
+        "FLD_006":"16.00",
+        "FLD_049":"EUR",
+        "FLD_051":"EUR"
+        }
+   },
+  json: true
+};
+
+
+request(message, function (error, response, body) {
+    console.log(JSON.stringify(response, null, 4))
+    })
+</code></pre>
+<h1 id="error-codes">Error codes</h1>
+<hr />
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Symbolic Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>RCC_SUCCESS</td>
+<td>Operation completed successfully.</td>
+</tr>
+<tr>
+<td>1</td>
+<td>RCC_COMPONENT_LOCKED</td>
+<td>Required system component is locked.</td>
+</tr>
+<tr>
+<td>2</td>
+<td>RCC_ACCESS_DENIED</td>
+<td>Access is denied.</td>
+</tr>
+<tr>
+<td>3</td>
+<td>RCC_INVALID_REQUEST</td>
+<td>Request is invalid.</td>
+</tr>
+<tr>
+<td>4</td>
+<td>RCC_TIMEOUT</td>
+<td>Request timeout.</td>
+</tr>
+<tr>
+<td>5</td>
+<td>RCC_OUT_OF_STATE_REQUEST</td>
+<td>Request is out of state.</td>
+</tr>
+<tr>
+<td>6</td>
+<td>RCC_DB_FAILURE</td>
+<td>Backend database failure. Usually returned when query to backend SQl database returns an error.</td>
+</tr>
+<tr>
+<td>7</td>
+<td>RCC_INVALID_OBJECT_ID</td>
+<td>Object ID is invalid.</td>
+</tr>
+<tr>
+<td>8</td>
+<td>RCC_ALREADY_EXIST</td>
+<td>Object or element already exist.</td>
+</tr>
+<tr>
+<td>9</td>
+<td>RCC_COMM_FAILURE</td>
+<td>Communication failure (unable to send or receive data).</td>
+</tr>
+<tr>
+<td>10</td>
+<td>RCC_SYSTEM_FAILURE</td>
+<td>General system failure.</td>
+</tr>
+<tr>
+<td>11</td>
+<td>RCC_INVALID_USER_ID</td>
+<td>Supplied user ID is invalid.</td>
+</tr>
+<tr>
+<td>12</td>
+<td>RCC_INVALID_ARGUMENT</td>
+<td>Supplied call argument is invalid.</td>
+</tr>
+<tr>
+<td>15</td>
+<td>RCC_OUT_OF_MEMORY</td>
+<td>Server is out of available memory and cannot complete requested operation.</td>
+</tr>
+<tr>
+<td>16</td>
+<td>RCC_IO_ERROR</td>
+<td>Server side input/output error.</td>
+</tr>
+<tr>
+<td>23</td>
+<td>RCC_OPERATION_IN_PROGRESS</td>
+<td>Operation already in progress - new operation cannot be started.</td>
+</tr>
+<tr>
+<td>28</td>
+<td>RCC_NOT_IMPLEMENTED</td>
+<td>Command not implemented.</td>
+</tr>
+<tr>
+<td>31</td>
+<td>RCC_VERSION_MISMATCH</td>
+<td>Client and server version mismatch.</td>
+</tr>
+<tr>
+<td>35</td>
+<td>RCC_RESOURCE_BUSY</td>
+<td>Requested resource is busy.</td>
+</tr>
+<tr>
+<td>40</td>
+<td>RCC_BAD_PROTOCOL</td>
+<td>Client and server protocol version mismatch.</td>
+</tr>
+<tr>
+<td>42</td>
+<td>RCC_NO_CIPHERS</td>
+<td>No ciphers available.</td>
+</tr>
+<tr>
+<td>43</td>
+<td>RCC_INVALID_PUBLIC_KEY</td>
+<td>Public key is invalid.</td>
+</tr>
+<tr>
+<td>44</td>
+<td>RCC_INVALID_SESSION_KEY</td>
+<td>Session key is invalid.</td>
+</tr>
+<tr>
+<td>45</td>
+<td>RCC_NO_ENCRYPTION_SUPPORT</td>
+<td>No encryption support on client system.</td>
+</tr>
+<tr>
+<td>46</td>
+<td>RCC_INTERNAL_ERROR</td>
+<td>Server internal error.</td>
+</tr>
+<tr>
+<td>60</td>
+<td>RCC_ACCOUNT_DISABLED</td>
+<td>User account is disabled.</td>
+</tr>
+<tr>
+<td>61</td>
+<td>RCC_NO_GRACE_LOGINS</td>
+<td>User's password is expired and no more grace logins.</td>
+</tr>
+<tr>
+<td>62</td>
+<td>RCC_CONNECTION_BROKEN</td>
+<td>Underlying TCP/IP connection broken.</td>
+</tr>
+<tr>
+<td>64</td>
+<td>RCC_DB_CONNECTION_LOST</td>
+<td>Server lost connection to backend database.</td>
+</tr>
+<tr>
+<td>71</td>
+<td>RCC_LOCAL_CRYPTO_ERROR</td>
+<td>Local crypto engine error.</td>
+</tr>
+<tr>
+<td>72</td>
+<td>RCC_UNSUPPORTED_AUTH_TYPE</td>
+<td>Unsupported authentication type.</td>
+</tr>
+<tr>
+<td>73</td>
+<td>RCC_BAD_CERTIFICATE</td>
+<td>Invalid certificate provided for authentication.</td>
+</tr>
+<tr>
+<td>74</td>
+<td>RCC_INVALID_CERT_ID</td>
+<td>Certificate ID is invalid.</td>
+</tr>
+<tr>
+<td>87</td>
+<td>RCC_WEAK_PASSWORD</td>
+<td>New password is too weak.</td>
+</tr>
+<tr>
+<td>88</td>
+<td>RCC_REUSED_PASSWORD</td>
+<td>New password is identical to old one.</td>
+</tr>
+</tbody>
+</table>
+</body></html>

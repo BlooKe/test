@@ -1,0 +1,69 @@
+[
+  {
+    "comment": "/**\n     * @description\n     * This method creates or updates Employee record.\n     * If the Employee is found by USER_NAME the specified record will be updated,\n     * if a record with specified USER_NAME is missing a new record is created.\n     *\n     * Note that StrongHold mus have User Table \"EMPLOYEES\" with these columns (length may vary):\n     *\n     * | Name             | Type          |\n     * | ---------------- | ------------  |\n     * | INST_CODE        | VARCHAR2(255) |\n     * | USER_NAME        | VARCHAR2(255) |\n     * | USER_DESCRIPTION | VARCHAR2(255) |\n     * | ROLE_LIST        | VARCHAR2(255) |\n     *\n     * @function insertEmployee\n     *\n     * @param {string} [INST_CODE] Institution CODE the customer belongs to. If not assigned, the default one would be assigned.\n     * @param {string} USER_NAME User name\n     * @param {string} [USER_DESCRIPTION] Additional description\n     * @param {string} [ROLE_LIST] The list of roles\n     *\n     * @returns\n     *\n     * | Name         | Description       |\n     * | :----------- | :---------------  |\n     * | error        | Error code        |\n     * | description  | Error description |\n     *\n     * @example <caption>Request</caption>\n     *body:\n     *{\n     *    INST_CODE: \"DFLT\",\n     *    USER_NAME: \"andris\",\n     *    USER_DESCRIPTION: \"description\",\n     *    ROLE_LIST: \"FRONTOFFICE,MANAGER\"\n     *}\n     * @example <caption>Return with accept</caption>\n     *\"statusCode\": 200,\n     *\"body\": {\n     *  \"error\": 0,\n     *  \"description\": \"Request completed successfully\"\n     *}\n     * @example <caption>Return with accept</caption>\n     * \"statusCode\": 500,\n     * \"body\": {\n     *    \"error\": 6,\n     *    \"description\": \"Database failure\"\n     *}\n     **/",
+    "meta": {
+      "filename": "request-mapping.js",
+      "lineno": 246,
+      "columnno": 4,
+      "path": "/home/lradzev/D8/GIT/StrongHold/clion/sh4ib/src/nodeApi/sh-rest",
+      "code": {}
+    },
+    "description": "This method creates or updates Employee record.\nIf the Employee is found by USER_NAME the specified record will be updated,\nif a record with specified USER_NAME is missing a new record is created.\n\nNote that StrongHold mus have User Table \"EMPLOYEES\" with these columns (length may vary):\n\n| Name             | Type          |\n| ---------------- | ------------  |\n| INST_CODE        | VARCHAR2(255) |\n| USER_NAME        | VARCHAR2(255) |\n| USER_DESCRIPTION | VARCHAR2(255) |\n| ROLE_LIST        | VARCHAR2(255) |",
+    "kind": "function",
+    "name": "insertEmployee",
+    "params": [
+      {
+        "type": {
+          "names": [
+            "string"
+          ]
+        },
+        "optional": true,
+        "description": "Institution CODE the customer belongs to. If not assigned, the default one would be assigned.",
+        "name": "INST_CODE"
+      },
+      {
+        "type": {
+          "names": [
+            "string"
+          ]
+        },
+        "description": "User name",
+        "name": "USER_NAME"
+      },
+      {
+        "type": {
+          "names": [
+            "string"
+          ]
+        },
+        "optional": true,
+        "description": "Additional description",
+        "name": "USER_DESCRIPTION"
+      },
+      {
+        "type": {
+          "names": [
+            "string"
+          ]
+        },
+        "optional": true,
+        "description": "The list of roles",
+        "name": "ROLE_LIST"
+      }
+    ],
+    "returns": [
+      {
+        "description": "| Name         | Description       |\n| :----------- | :---------------  |\n| error        | Error code        |\n| description  | Error description |"
+      }
+    ],
+    "examples": [
+      "<caption>Request</caption>\nbody:\n{\n   INST_CODE: \"DFLT\",\n   USER_NAME: \"andris\",\n   USER_DESCRIPTION: \"description\",\n   ROLE_LIST: \"FRONTOFFICE,MANAGER\"\n}",
+      "<caption>Return with accept</caption>\n\"statusCode\": 200,\n\"body\": {\n \"error\": 0,\n \"description\": \"Request completed successfully\"\n}",
+      "<caption>Return with accept</caption>\n\"statusCode\": 500,\n\"body\": {\n   \"error\": 6,\n   \"description\": \"Database failure\"\n}"
+    ],
+    "longname": "insertEmployee",
+    "scope": "global",
+    "$longname": "insertEmployee"
+  }
+]
